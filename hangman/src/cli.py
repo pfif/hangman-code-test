@@ -38,10 +38,17 @@ def event(key, state):
     if state["current_screen"] == "menu":
         return event_menu(key)
 
+    if state["current_screen"] == "game":
+        return event_game(key)
+
 
 def event_menu(key):
-    if key:
-        return "start_game"
+    return ("start_game", ())
+
+
+def event_game(key):
+    if key in "abcdefghijklmnopqrstuvwxyz1234567890":
+        return ("input_letter", (key,))
 
 
 # GUI

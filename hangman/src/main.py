@@ -11,10 +11,11 @@ def main():
         while(True):
             event = uiinterpreter.current_event(window, state)
             if event:
-                state = getattr(uistate, event)(state)
+                event_name, event_args = event
+                state = getattr(uistate, event_name)(state, *event_args)
 
             uiinterpreter.render(state, window)
-            sleep(0.16)  # Limit the game to 60fps and prevents too many CPU operation
+            sleep(0.016)  # Limit the game to 60fps and prevents too many CPU operation
 
 
 if __name__ == "__main__":

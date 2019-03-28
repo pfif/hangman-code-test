@@ -10,17 +10,38 @@ def test_menu_press_e_key():
     state = {
         "current_screen": "menu"
     }
-    assert event("e", state) == "start_game"
+    assert event("e", state) == ("start_game", ())
 
 
 def test_menu_press_key_left():
     state = {
         "current_screen": "menu"
     }
-    assert event("KEY_LEFT", state) == "start_game"
+    assert event("KEY_LEFT", state) == ("start_game", ())
 
 
-# Testing render
+def test_game_press_key_e():
+    state = {
+        "current_screen": "game"
+    }
+    assert event("e", state) == ("input_letter", ("e",))
+
+
+def test_game_press_key_three():
+    state = {
+        "current_screen": "game"
+    }
+    assert event("3", state) == ("input_letter", ("3",))
+
+
+def test_game_press_key_left():
+    state = {
+        "current_screen": "game"
+    }
+    assert event("KEY_LEFT", state) is None
+
+
+# Testing render()
 @pytest.mark.parametrize("displayed_letter,expected_string", [
     ([None, None, None], "_ _ _"),
     ([None, "i", None], "_ i _"),

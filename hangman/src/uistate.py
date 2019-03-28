@@ -16,7 +16,8 @@ def start_game(state):
 
     state["game"] = {
         "word": word,
-        "displayed_letters": hide_letters_from_word(word, [])
+        "displayed_letters": hide_letters_from_word(word, []),
+        "input_letters": set()
     }
 
     return state
@@ -24,3 +25,14 @@ def start_game(state):
 
 def hide_letters_from_word(word, foundletters):
     return [(letter if letter in foundletters else None) for letter in word]
+
+
+def input_letter(state, letter):
+    state["game"]["input_letters"].add(letter)
+
+    word = state["game"]["word"]
+    input_letter = state["game"]["input_letters"]
+    state["game"]["displayed_letters"] = hide_letters_from_word(
+        word, input_letter)
+
+    return state
