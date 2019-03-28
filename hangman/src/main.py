@@ -1,3 +1,4 @@
+from time import sleep
 from hangman.src import uistate
 from hangman.src import cli as uiinterpreter
 
@@ -13,6 +14,7 @@ def main():
                 state = getattr(uistate, event)(state)
 
             uiinterpreter.render(state, window)
+            sleep(0.16)  # Limit the game to 60fps and prevents too many CPU operation
 
 
 if __name__ == "__main__":
