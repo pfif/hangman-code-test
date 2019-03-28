@@ -9,7 +9,7 @@ def main():
         uiinterpreter.initialization()
 
         while(True):
-            event = uiinterpreter.current_event()
+            event = uiinterpreter.current_event(window, state)
             if event:
                 state = getattr(uistate, event)(state)
 

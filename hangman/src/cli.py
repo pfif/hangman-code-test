@@ -25,15 +25,30 @@ def initialization():
 
 
 # Input
-def current_event():
-    pass
+def current_event(stdsrc, state):
+    try:
+        key = stdsrc.getkey()
+    except curses.error:
+        pass
+    else:
+        return event(key, state)
+
+
+def event(key, state):
+    if state["current_screen"] == "menu":
+        return event_menu(key)
+
+
+def event_menu(key):
+    if key:
+        return "start_game"
 
 
 # GUI
 def render(state, stdscr):
     stdscr.erase()
 
-    if (state["current_screen"] == "menu"):
+    if state["current_screen"] == "menu":
         render_menu(stdscr)
 
     stdscr.refresh()

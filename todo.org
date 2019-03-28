@@ -5,7 +5,7 @@
 ** DONE As a player, I see the name of the game in the menu
 ** TODO As a player, I see the name in a classy font
 * Game
-** TODO [#A] As a player, I see the button to start the game in the menu
+** DONE [#A] As a player, I see the button to start the game in the menu
 ** TODO As a player, I see an introduction to the game where the context of the game is explained
 ** TODO [#A] As a player, I see the letters I did not guess as empty elements and the letter that I did guess
 ** TODO [#A] 
