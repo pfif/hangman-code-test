@@ -7,8 +7,7 @@
 * Game
 ** DONE [#A] As a player, I see the button to start the game in the menu
 ** TODO As a player, I see an introduction to the game where the context of the game is explained
-** TODO [#A] As a player, I see the letters I did not guess as empty elements and the letter that I did guess
-** TODO [#A] 
+** DONE [#A] As a player, I see the letters I did not guess as empty elements and the letter that I did guess
 ** TODO [#A] As a player, I see all the letters that I made a guess for
 ** TODO [#A] As a player, I can make a guess for a letter
 ** TODO [#A] As a player, I see how many bars is left to build my prison
@@ -17,6 +16,7 @@
 ** TODO [#A] As a player, when I win, I want to see a screen telling me that I did, and repeating the word to me
 ** TODO [#A] As a player, when I loose, I want to see a screen where I see the word I was suppose to guess, and mockery from the jailor
 ** TODO [#A] As a player, after the end screen, I am ask my name that is then use to save in the leaderboard
+** TODO [#A] As a developer, I want to easily extend the list of words
 * Leaderboard
 ** TODO As a player, I see the button to go to the leaderboard in the menu
 ** TODO As a player, I can see the leaderboard, ranking people from the high
