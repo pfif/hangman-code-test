@@ -12,9 +12,9 @@
 ** DONE [#A] As a player, I can make a guess for a letter
 ** DONE [#A] As a player, I see how many bars is left to build my prison
 ** TODO [#B] As a player, I see a comment of the jailor at the bottom of the screen
-** TODO [#A] As a player, from I input a letter, from time to time, I see a suspens screen with a comment of the jailor and three dots
+** TODO [#B] As a player, from I input a letter, from time to time, I see a suspens screen with a comment of the jailor and three dots
 ** TODO [#A] As a player, when I win, I want to see a screen telling me that I did, and repeating the word to me
-** TODO [#A] As a player, when I loose, I want to see a screen where I see the word I was suppose to guess, and mockery from the jailor
+** DONE [#A] As a player, when I loose, I want to see a screen where I see the word I was suppose to guess
 ** TODO [#A] As a player, after the end screen, I am ask my name that is then use to save in the leaderboard
 ** TODO [#A] As a developer, I want to easily extend the list of words
 ** TODO As a player I want to see the letters I selected in order

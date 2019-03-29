@@ -1,8 +1,9 @@
 import pytest
 
+
 from hangman.src.uistate import (
     initial_state, start_game, hide_letters_from_word, input_letter,
-    compute_remaining_lives)
+    compute_remaining_lives, end_game_if_lives_too_low)
 
 
 # Initial state
@@ -52,6 +53,7 @@ def test_start_game_add_game_state():
     assert "word" in start_game(state)["game"]
     assert "displayed_letters" in start_game(state)["game"]
     assert set() == start_game(state)["game"]["input_letters"]
+    assert "main" == start_game(state)["game"]["mode"]
 
 
 # Input letter
@@ -60,7 +62,8 @@ def test_input_letter_empty_input_set():
         "game": {
             "word": "boogie",
             "displayed_letters": [None, None, None, None, None, None],
-            "input_letters": set()
+            "input_letters": set(),
+            "lives": 5
         }
     }
 
@@ -72,7 +75,8 @@ def test_input_letter_prefilled_set():
         "game": {
             "word": "boogie",
             "displayed_letters": ["b", None, None, None, None, None],
-            "input_letters": {"b"}
+            "input_letters": {"b"},
+            "lives": 5
         }
     }
 
@@ -96,3 +100,19 @@ def test_compute_remaining_lives(letter, initial_lives, expected):
     }
 
     assert compute_remaining_lives(state, letter)["game"]["lives"] == expected
+
+
+@pytest.mark.parametrize("remaining_lives,expected_mode", [
+    (1, "main"),
+    (0, "end_screen"),
+])
+def test_end_game_if_lives_too_low_setting_mode(
+        remaining_lives, expected_mode):
+    state = {
+        "game": {
+            "mode": "main",
+            "lives": remaining_lives,
+        }
+    }
+
+    assert end_game_if_lives_too_low(state)["game"]["mode"] == expected_mode

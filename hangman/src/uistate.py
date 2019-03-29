@@ -3,19 +3,20 @@ from random import choice
 WORDS = ["3dhubs", "marvin", "print", "filament", "order", "layer"]
 
 
-# Events
 def initial_state():
     return {
         "current_screen": "menu",
     }
 
 
+# Events
 def start_game(state):
     state["current_screen"] = "game"
 
     word = choice(WORDS)
 
     state["game"] = {
+        "mode": "main",
         "word": word,
         "input_letters": set(),
         "lives": 5
@@ -30,7 +31,12 @@ def input_letter(state, letter):
     state["game"]["input_letters"].add(letter)
     state = hide_letters_from_word(state)
     state = compute_remaining_lives(state, letter)
+    state = end_game_if_lives_too_low(state)
     return state
+
+
+def pass_screen(state):
+    pass
 
 
 # Complex state modifiers
@@ -53,4 +59,10 @@ def compute_remaining_lives(state, letter):
         state["game"]["lives"] -= 1
 
     return state
-"b"
+
+
+def end_game_if_lives_too_low(state):
+    if state["game"]["lives"] == 0:
+        state["game"]["mode"] = "end_screen"
+        state["game"]["end_screen_sentence"] = "You loose! (Press any key to continue)"  # noqa
+    return state

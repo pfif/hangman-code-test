@@ -36,19 +36,16 @@ def current_event(stdsrc, state):
 
 def event(key, state):
     if state["current_screen"] == "menu":
-        return event_menu(key)
+        return ("start_game", ())
 
     if state["current_screen"] == "game":
-        return event_game(key)
+        return event_game(key, state["game"])
 
 
-def event_menu(key):
-    return ("start_game", ())
-
-
-def event_game(key):
-    if key in "abcdefghijklmnopqrstuvwxyz1234567890":
-        return ("input_letter", (key,))
+def event_game(key, state):
+    if state["mode"] == "main":
+        if key in "abcdefghijklmnopqrstuvwxyz1234567890":
+            return ("input_letter", (key,))
 
 
 # GUI
@@ -73,7 +70,13 @@ def render_game(stdscr, state):
     stdscr.addstr(0, 0, 'Guess this word')
     render_game_displayed_letters(stdscr, state)
     render_game_remaining_lives(stdscr, state, 80)
-    render_game_guessed_letters(stdscr, state)
+
+    if state["mode"] == "main":
+        sentence = sentence_guessed_letters(state)
+    elif state["mode"] == "end_screen":
+        sentence = state["end_screen_sentence"]
+
+    stdscr.addstr(4, 0, sentence)
 
 
 def render_game_displayed_letters(stdscr, state):
@@ -82,9 +85,8 @@ def render_game_displayed_letters(stdscr, state):
          for letter in state["displayed_letters"]]))
 
 
-def render_game_guessed_letters(stdscr, state):
-    stdscr.addstr(4, 0, "Guessed letters: " + ", ".join(
-        sorted(state["input_letters"])))
+def sentence_guessed_letters(state):
+    return "Guessed letters: " + ", ".join(sorted(state["input_letters"]))
 
 
 def render_game_remaining_lives(stdsrc, state, width):

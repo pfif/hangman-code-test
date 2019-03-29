@@ -4,7 +4,7 @@ import pytest
 
 from hangman.src.cli import (
     event, render_game_displayed_letters,
-    render_game_guessed_letters, render_game_remaining_lives)
+    sentence_guessed_letters, render_game_remaining_lives)
 
 
 # Testing event()
@@ -17,28 +17,50 @@ def test_menu_press_e_key():
 
 def test_menu_press_key_left():
     state = {
-        "current_screen": "menu"
+        "current_screen": "menu",
+        "game": {
+            "mode": "main"
+        }
     }
     assert event("KEY_LEFT", state) == ("start_game", ())
 
 
 def test_game_press_key_e():
     state = {
-        "current_screen": "game"
+        "current_screen": "game",
+        "game": {
+            "mode": "main"
+        }
     }
     assert event("e", state) == ("input_letter", ("e",))
 
 
 def test_game_press_key_three():
     state = {
-        "current_screen": "game"
+        "current_screen": "game",
+        "game": {
+            "mode": "main"
+        }
     }
     assert event("3", state) == ("input_letter", ("3",))
 
 
 def test_game_press_key_left():
     state = {
-        "current_screen": "game"
+        "current_screen": "game",
+        "game": {
+            "mode": "main"
+        }
+    }
+    assert event("KEY_LEFT", state) is None
+
+
+def test_game_end_screen_mode_press_e():
+    state = {
+        "current_screen": "game",
+        "game": {
+            "mode": "end_screen"
+        }
     }
     assert event("KEY_LEFT", state) is None
 
@@ -66,13 +88,11 @@ def test_render_word(displayed_letter, expected_string):
     ({"a", "e", "p"}, "a, e, p")
 ])
 def test_render_guessed_letters(input_letters, expected_string):
-    stdscr = MagicMock()
     state = {
         "input_letters": input_letters
     }
-    render_game_guessed_letters(stdscr, state)
-    stdscr.addstr.assert_called_with(
-        4, 0, "Guessed letters: " + expected_string)
+    assert sentence_guessed_letters(state) == (
+        "Guessed letters: " + expected_string)
 
 
 @pytest.mark.parametrize("lives,position,string", [
