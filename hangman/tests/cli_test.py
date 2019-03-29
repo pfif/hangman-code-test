@@ -94,3 +94,14 @@ def test_render_game_remaining_lives(lives, position, string):
     render(state, stdscr)
 
     stdscr.addstr.assert_any_call(0, position, "Remaining lives: " + string)
+
+
+def test_print_score():
+    stdscr = MagicMock()
+
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["score"] = 40
+
+    render(state, stdscr)
+
+    stdscr.addstr.assert_any_call(0, 0, "Score: 40")

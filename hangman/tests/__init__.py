@@ -7,7 +7,8 @@ STATE_IN_GAME = {
             "b", None, None, "g", None, None
         ],
         "input_letters": {"b", "n", "g", "u"},
-        "lives": 3
+        "lives": 3,
+        "score": 60
     }
 }
 

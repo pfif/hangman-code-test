@@ -69,7 +69,7 @@ def render_menu(stdscr):
 
 
 def render_game(stdscr, state):
-    stdscr.addstr(0, 0, 'Guess this word')
+    stdscr.addstr(0, 0, 'Score: %s' % state["score"])
     render_game_displayed_letters(stdscr, state)
     render_game_remaining_lives(stdscr, state, 80)
 

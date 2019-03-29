@@ -19,7 +19,8 @@ def start_game(state):
         "mode": "main",
         "word": word,
         "input_letters": set(),
-        "lives": 5
+        "lives": 5,
+        "score": 100
     }
 
     state = hide_letters_from_word(state)
@@ -30,7 +31,7 @@ def start_game(state):
 def input_letter(state, letter):
     state["game"]["input_letters"].add(letter)
     state = hide_letters_from_word(state)
-    state = compute_remaining_lives(state, letter)
+    state = compute_remaining_lives_and_score(state, letter)
     state = end_game_if_lives_too_low(state)
     state = end_game_if_word_found(state)
     return state
@@ -53,12 +54,13 @@ def hide_letters_from_word(state):
     return state
 
 
-def compute_remaining_lives(state, letter):
+def compute_remaining_lives_and_score(state, letter):
     word = state["game"]["word"]
     current_lives = state["game"]["lives"]
 
     if letter not in word and current_lives > 0:
         state["game"]["lives"] -= 1
+        state["game"]["score"] -= 20
 
     return state
 

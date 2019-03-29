@@ -16,7 +16,7 @@
 ** DONE [#A] As a player, when I win, I want to see a screen telling me that I did, and repeating the word to me
 ** DONE [#A] As a player, when I loose, I want to see a screen where I see the word I was suppose to guess
 ** DONE As a player, I am taken to the menu after I saw the "loosing/winning" screen
-** TODO As a player, I see my score on the current game
+** DONE As a player, I see my score on the current game
 ** TODO As a player, I see the hi-score on every screens
 ** TODO As a player, after the end screen, I am asked my name that is then use to save in the leaderboard
 ** DONE [#A] As a developer, I want to easily extend the list of words

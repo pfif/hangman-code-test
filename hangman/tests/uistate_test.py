@@ -22,6 +22,7 @@ def test_start_game_current_screen_is_game():
 def test_start_game_default_value():
     assert set() == start_game(STATE_MENU)["game"]["input_letters"]
     assert "main" == start_game(STATE_MENU)["game"]["mode"]
+    assert 100 == start_game(STATE_MENU)["game"]["score"]
 
 
 def test_start_game_choose_random_word():
@@ -110,6 +111,20 @@ def test_input_letter_word_was_wound(inputed_letters, expected_mode):
     assert input_letter(state, "e")["game"]["mode"] == expected_mode
 
 
+@pytest.mark.parametrize("current_score,letter,expected_new_score", [
+    (100, "r", 80),
+    (100, "o", 100),
+    (20, "r", 0),
+])
+def test_compute_new_score(current_score, letter, expected_new_score):
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["word"] = "boogie"
+    state["game"]["score"] = current_score
+
+    assert input_letter(state, letter)["game"]["score"] == expected_new_score
+
+
+# Pass screen
 def test_pass_screen_to_menu():
     state = deepcopy(STATE_IN_GAME)
     state["game"]["mode"] = "end_screen"
