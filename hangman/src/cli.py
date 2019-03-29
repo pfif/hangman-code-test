@@ -70,9 +70,24 @@ def render_menu(stdscr):
 
 
 def render_game(stdscr, state):
-    stdscr.addstr(0, 0, 'Jailor : "Guess this word if you don\'t want to finish in prison!"')
+    stdscr.addstr(0, 0, 'Guess this word')
+    render_game_displayed_letters(stdscr, state)
+    render_game_remaining_lives(stdscr, state, 80)
+    render_game_guessed_letters(stdscr, state)
+
+
+def render_game_displayed_letters(stdscr, state):
     stdscr.addstr(2, 0, " ".join(
         [(letter if letter is not None else "_")
          for letter in state["displayed_letters"]]))
+
+
+def render_game_guessed_letters(stdscr, state):
     stdscr.addstr(4, 0, "Guessed letters: " + ", ".join(
         sorted(state["input_letters"])))
+
+
+def render_game_remaining_lives(stdsrc, state, width):
+    lives_string = "Remaining lives: " + " ".join(["|"] * state["lives"])
+
+    stdsrc.addstr(0, width - len(lives_string), lives_string)

@@ -1,7 +1,8 @@
 import pytest
 
 from hangman.src.uistate import (
-    initial_state, start_game, hide_letters_from_word, input_letter)
+    initial_state, start_game, hide_letters_from_word, input_letter,
+    compute_remaining_lives)
 
 
 # Initial state
@@ -12,13 +13,20 @@ def test_initial_state_current_screen_is_menu():
 
 # Hide letters from word
 @pytest.mark.parametrize("word,foundletters,expected", [
-    ("boogie", [], [None for i in range(8)]),
+    ("boogie", [], [None for i in range(6)]),
     ("boogie", ["o"], [None, "o", "o", None, None, None]),
     ("boogie", ["o", "i"], [None, "o", "o", None, "i", None]),
     ("boogie", ["b", "o", "g", "i", "e"], ["b", "o", "o", "g", "i", "e"]),
 ])
-def hide_letters_from_word_tests(word, foundletters, expected):
-    assert hide_letters_from_word(word, foundletters) == expected
+def test_hide_letters_from_word_tests(word, foundletters, expected):
+    state = {
+        "game": {
+            "word": word,
+            "input_letters": foundletters
+        }
+    }
+    assert hide_letters_from_word(state)["game"]["displayed_letters"] == (
+        expected)
 
 
 # Start Game
@@ -71,14 +79,20 @@ def test_input_letter_prefilled_set():
     assert input_letter(state, "o")["game"]["input_letters"] == {"o", "b"}
 
 
-def test_input_letter_set_change_displayed_letters():
+@pytest.mark.parametrize("letter,initial_lives,expected", [
+    ("b", 5, 5),
+    ("r", 5, 4),
+    ("a", 0, 0),
+    ("b", 1, 1),
+    ("o", 3, 3),
+    ("x", 1, 0)
+])
+def test_compute_remaining_lives(letter, initial_lives, expected):
     state = {
         "game": {
             "word": "boogie",
-            "displayed_letters": ["b", None, None, None, None, None],
-            "input_letters": {"b"}
+            "lives": initial_lives
         }
     }
 
-    assert input_letter(state, "o")["game"]["displayed_letters"] == [
-        "b", "o", "o", None, None, None]
+    assert compute_remaining_lives(state, letter)["game"]["lives"] == expected

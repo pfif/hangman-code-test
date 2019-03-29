@@ -2,7 +2,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from hangman.src.cli import event, render
+from hangman.src.cli import (
+    event, render_game_displayed_letters,
+    render_game_guessed_letters, render_game_remaining_lives)
 
 
 # Testing event()
@@ -51,16 +53,12 @@ def test_game_press_key_left():
 def test_render_word(displayed_letter, expected_string):
     stdscr = MagicMock()
     state = {
-        "current_screen": "game",
-        "game": {
-            "displayed_letters": displayed_letter,
-            "input_letters": {}
-        }
+        "displayed_letters": displayed_letter,
     }
 
-    render(state, stdscr)
+    render_game_displayed_letters(stdscr, state)
 
-    stdscr.addstr.assert_any_call(2, 0, expected_string)
+    stdscr.addstr.assert_called_with(2, 0, expected_string)
 
 
 @pytest.mark.parametrize("input_letters,expected_string", [
@@ -70,12 +68,27 @@ def test_render_word(displayed_letter, expected_string):
 def test_render_guessed_letters(input_letters, expected_string):
     stdscr = MagicMock()
     state = {
-        "current_screen": "game",
-        "game": {
-            "displayed_letters": [],
-            "input_letters": input_letters
-        }
+        "input_letters": input_letters
     }
-    render(state, stdscr)
-    stdscr.addstr.assert_any_call(
+    render_game_guessed_letters(stdscr, state)
+    stdscr.addstr.assert_called_with(
         4, 0, "Guessed letters: " + expected_string)
+
+
+@pytest.mark.parametrize("lives,position,string", [
+    (5, 54, "| | | | |"),
+    (4, 56, "| | | |"),
+    (3, 58, "| | |"),
+    (2, 60, "| |"),
+    (1, 62, "|")
+])
+def test_render_game_remaining_lives(lives, position, string):
+    stdscr = MagicMock()
+    state = {
+        "lives": lives
+    }
+
+    render_game_remaining_lives(stdscr, state, 80)
+
+    stdscr.addstr.assert_called_with(
+        0, position, "Remaining lives: " + string)
