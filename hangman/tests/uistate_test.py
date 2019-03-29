@@ -4,7 +4,8 @@ from unittest.mock import patch
 import pytest
 
 from hangman.tests import STATE_MENU, STATE_IN_GAME
-from hangman.src.uistate import initial_state, start_game, input_letter
+from hangman.src.uistate import (
+    initial_state, start_game, input_letter, pass_screen)
 
 
 # Initial state
@@ -107,3 +108,10 @@ def test_input_letter_word_was_wound(inputed_letters, expected_mode):
     state["game"]["input_letters"] = inputed_letters
 
     assert input_letter(state, "e")["game"]["mode"] == expected_mode
+
+
+def test_pass_screen_to_menu():
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["mode"] = "end_screen"
+
+    assert pass_screen(state)["current_screen"] == "menu"

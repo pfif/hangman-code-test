@@ -46,6 +46,8 @@ def event_game(key, state):
     if state["mode"] == "main":
         if key in "abcdefghijklmnopqrstuvwxyz1234567890":
             return ("input_letter", (key,))
+    elif state["mode"] == "end_screen":
+        return ("pass_screen", ())
 
 
 # GUI

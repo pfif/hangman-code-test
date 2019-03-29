@@ -3,9 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from hangman.src.cli import (
-    event, render, render_game_displayed_letters,
-    sentence_guessed_letters, render_game_remaining_lives)
+from hangman.src.cli import event, render
 from hangman.tests import STATE_MENU, STATE_IN_GAME
 
 
@@ -40,7 +38,13 @@ def test_game_press_key_left():
 def test_game_end_screen_mode_press_e():
     state = deepcopy(STATE_IN_GAME)
     state["game"]["mode"] = "end_screen"
-    assert event("KEY_LEFT", state) is None
+    assert event("e", state) == ("pass_screen", ())
+
+
+def test_game_end_screen_mode_press_key_left():
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["mode"] = "end_screen"
+    assert event("KEY_LEFT", state) == ("pass_screen", ())
 
 
 # Testing render()

@@ -37,7 +37,8 @@ def input_letter(state, letter):
 
 
 def pass_screen(state):
-    pass
+    state["current_screen"] = "menu"
+    return state
 
 
 # Complex state modifiers
