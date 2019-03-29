@@ -1,67 +1,45 @@
+from copy import deepcopy
 from unittest.mock import MagicMock
 
 import pytest
 
 from hangman.src.cli import (
-    event, render_game_displayed_letters,
+    event, render, render_game_displayed_letters,
     sentence_guessed_letters, render_game_remaining_lives)
+from hangman.tests import STATE_MENU, STATE_IN_GAME
 
 
 # Testing event()
 def test_menu_press_e_key():
-    state = {
-        "current_screen": "menu"
-    }
-    assert event("e", state) == ("start_game", ())
+    assert event("e", STATE_MENU) == ("start_game", ())
 
 
 def test_menu_press_key_left():
-    state = {
-        "current_screen": "menu",
-        "game": {
-            "mode": "main"
-        }
-    }
+    state = deepcopy(STATE_MENU)
     assert event("KEY_LEFT", state) == ("start_game", ())
 
 
 def test_game_press_key_e():
-    state = {
-        "current_screen": "game",
-        "game": {
-            "mode": "main"
-        }
-    }
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["mode"] = "main"
     assert event("e", state) == ("input_letter", ("e",))
 
 
 def test_game_press_key_three():
-    state = {
-        "current_screen": "game",
-        "game": {
-            "mode": "main"
-        }
-    }
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["mode"] = "main"
     assert event("3", state) == ("input_letter", ("3",))
 
 
 def test_game_press_key_left():
-    state = {
-        "current_screen": "game",
-        "game": {
-            "mode": "main"
-        }
-    }
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["mode"] = "main"
     assert event("KEY_LEFT", state) is None
 
 
 def test_game_end_screen_mode_press_e():
-    state = {
-        "current_screen": "game",
-        "game": {
-            "mode": "end_screen"
-        }
-    }
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["mode"] = "end_screen"
     assert event("KEY_LEFT", state) is None
 
 
@@ -74,13 +52,12 @@ def test_game_end_screen_mode_press_e():
 ])
 def test_render_word(displayed_letter, expected_string):
     stdscr = MagicMock()
-    state = {
-        "displayed_letters": displayed_letter,
-    }
 
-    render_game_displayed_letters(stdscr, state)
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["displayed_letters"] = displayed_letter
 
-    stdscr.addstr.assert_called_with(2, 0, expected_string)
+    render(state, stdscr)
+    stdscr.addstr.assert_any_call(2, 0, expected_string)
 
 
 @pytest.mark.parametrize("input_letters,expected_string", [
@@ -88,11 +65,13 @@ def test_render_word(displayed_letter, expected_string):
     ({"a", "e", "p"}, "a, e, p")
 ])
 def test_render_guessed_letters(input_letters, expected_string):
-    state = {
-        "input_letters": input_letters
-    }
-    assert sentence_guessed_letters(state) == (
-        "Guessed letters: " + expected_string)
+    stdscr = MagicMock()
+
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["input_letters"] = input_letters
+
+    render(state, stdscr)
+    stdscr.addstr.assert_any_call(4, 0, "Guessed letters: " + expected_string)
 
 
 @pytest.mark.parametrize("lives,position,string", [
@@ -104,11 +83,10 @@ def test_render_guessed_letters(input_letters, expected_string):
 ])
 def test_render_game_remaining_lives(lives, position, string):
     stdscr = MagicMock()
-    state = {
-        "lives": lives
-    }
 
-    render_game_remaining_lives(stdscr, state, 80)
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["lives"] = lives
 
-    stdscr.addstr.assert_called_with(
-        0, position, "Remaining lives: " + string)
+    render(state, stdscr)
+
+    stdscr.addstr.assert_any_call(0, position, "Remaining lives: " + string)

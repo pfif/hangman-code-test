@@ -32,6 +32,7 @@ def input_letter(state, letter):
     state = hide_letters_from_word(state)
     state = compute_remaining_lives(state, letter)
     state = end_game_if_lives_too_low(state)
+    state = end_game_if_word_found(state)
     return state
 
 
@@ -65,4 +66,11 @@ def end_game_if_lives_too_low(state):
     if state["game"]["lives"] == 0:
         state["game"]["mode"] = "end_screen"
         state["game"]["end_screen_sentence"] = "You loose! (Press any key to continue)"  # noqa
+    return state
+
+
+def end_game_if_word_found(state):
+    if None not in state["game"]["displayed_letters"]:
+        state["game"]["mode"] = "end_screen"
+        state["game"]["end_screen_sentence"] = "You win! (Press any key to continue)"  # noqa
     return state

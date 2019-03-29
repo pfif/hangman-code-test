@@ -1,9 +1,10 @@
+from copy import deepcopy
+from unittest.mock import patch
+
 import pytest
 
-
-from hangman.src.uistate import (
-    initial_state, start_game, hide_letters_from_word, input_letter,
-    compute_remaining_lives, end_game_if_lives_too_low)
+from hangman.tests import STATE_MENU, STATE_IN_GAME
+from hangman.src.uistate import initial_state, start_game, input_letter
 
 
 # Initial state
@@ -12,73 +13,51 @@ def test_initial_state_current_screen_is_menu():
     assert "menu" == initial_state()["current_screen"]
 
 
-# Hide letters from word
-@pytest.mark.parametrize("word,foundletters,expected", [
-    ("boogie", [], [None for i in range(6)]),
-    ("boogie", ["o"], [None, "o", "o", None, None, None]),
-    ("boogie", ["o", "i"], [None, "o", "o", None, "i", None]),
-    ("boogie", ["b", "o", "g", "i", "e"], ["b", "o", "o", "g", "i", "e"]),
-])
-def test_hide_letters_from_word_tests(word, foundletters, expected):
-    state = {
-        "game": {
-            "word": word,
-            "input_letters": foundletters
-        }
-    }
-    assert hide_letters_from_word(state)["game"]["displayed_letters"] == (
-        expected)
-
-
 # Start Game
 def test_start_game_current_screen_is_game():
-    state = {
-        "current_screen": "menu"
-    }
-    assert "game" == start_game(state)["current_screen"]
+    assert "game" == start_game(STATE_MENU)["current_screen"]
 
 
-def test_start_game_keeps_state_intact():
-    state = {
-        "current_screen": "menu",
-        "other": "value"
-    }
-    assert "value" == start_game(state)["other"]
+def test_start_game_default_value():
+    assert set() == start_game(STATE_MENU)["game"]["input_letters"]
+    assert "main" == start_game(STATE_MENU)["game"]["mode"]
 
 
-def test_start_game_add_game_state():
-    state = {
-        "current_screen": "menu",
-    }
-    assert "word" in start_game(state)["game"]
-    assert "displayed_letters" in start_game(state)["game"]
-    assert set() == start_game(state)["game"]["input_letters"]
-    assert "main" == start_game(state)["game"]["mode"]
+def test_start_game_choose_random_word():
+    with patch("hangman.src.uistate.choice", side_effect=["boogie"]):
+        assert start_game(STATE_MENU)["game"]["word"] == "boogie"
+
+
+def test_start_game_choose_filled_default_state_with_nones():
+    with patch("hangman.src.uistate.choice", side_effect=["boogie"]):
+        assert start_game(STATE_MENU)["game"]["displayed_letters"] == [
+            None, None, None, None, None, None]
 
 
 # Input letter
-def test_input_letter_empty_input_set():
-    state = {
-        "game": {
-            "word": "boogie",
-            "displayed_letters": [None, None, None, None, None, None],
-            "input_letters": set(),
-            "lives": 5
-        }
-    }
+@pytest.mark.parametrize("input_letters,letter,expected", [
+    (set(), "o", [None, "o", "o", None, None, None]),
+    ({"o"}, "i", [None, "o", "o", None, "i", None]),
+    ({"b", "o", "g", "i"}, "e", ["b", "o", "o", "g", "i", "e"]),
+])
+def test_input_letter_displayed_letters(input_letters, letter, expected):
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["word"] = "boogie"
+    state["game"]["input_letters"] = input_letters
+
+    assert input_letter(state, letter)["game"]["displayed_letters"] == expected
+
+
+def test_input_letter_add_letter():
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["input_letters"] = set()
 
     assert input_letter(state, "o")["game"]["input_letters"] == {"o"}
 
 
 def test_input_letter_prefilled_set():
-    state = {
-        "game": {
-            "word": "boogie",
-            "displayed_letters": ["b", None, None, None, None, None],
-            "input_letters": {"b"},
-            "lives": 5
-        }
-    }
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["input_letters"] = {"b"}
 
     assert input_letter(state, "o")["game"]["input_letters"] == {"o", "b"}
 
@@ -91,28 +70,40 @@ def test_input_letter_prefilled_set():
     ("o", 3, 3),
     ("x", 1, 0)
 ])
-def test_compute_remaining_lives(letter, initial_lives, expected):
-    state = {
-        "game": {
-            "word": "boogie",
-            "lives": initial_lives
-        }
-    }
+def test_input_letter_compute_remaining_lives(letter, initial_lives, expected):
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["lives"] = initial_lives
 
-    assert compute_remaining_lives(state, letter)["game"]["lives"] == expected
+    assert input_letter(state, letter)["game"]["lives"] == expected
 
 
 @pytest.mark.parametrize("remaining_lives,expected_mode", [
-    (1, "main"),
-    (0, "end_screen"),
+    (2, "main"),
+    (1, "end_screen"),
 ])
-def test_end_game_if_lives_too_low_setting_mode(
-        remaining_lives, expected_mode):
-    state = {
-        "game": {
-            "mode": "main",
-            "lives": remaining_lives,
-        }
-    }
+def test_input_letter_end_of_lives(remaining_lives, expected_mode):
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["word"] = "boogie"
+    state["game"]["lives"] = remaining_lives
 
-    assert end_game_if_lives_too_low(state)["game"]["mode"] == expected_mode
+    assert input_letter(state, "r")["game"]["mode"] == expected_mode
+
+
+def test_input_letter_end_of_live_sentence():
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["word"] = "boogie"
+    state["game"]["lives"] = 0
+
+    assert input_letter(state, "r")["game"]["end_screen_sentence"] == "You loose! (Press any key to continue)"  # noqa
+
+
+@pytest.mark.parametrize("inputed_letters, expected_mode", [
+    ({"b", "o"}, "main"),
+    ({"b", "o", "g", "i"}, "end_screen"),
+])
+def test_input_letter_word_was_wound(inputed_letters, expected_mode):
+    state = deepcopy(STATE_IN_GAME)
+    state["game"]["word"] = "boogie"
+    state["game"]["input_letters"] = inputed_letters
+
+    assert input_letter(state, "e")["game"]["mode"] == expected_mode
