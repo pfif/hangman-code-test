@@ -71,5 +71,8 @@ def render_menu(stdscr):
 
 def render_game(stdscr, state):
     stdscr.addstr(0, 0, 'Jailor : "Guess this word if you don\'t want to finish in prison!"')
-    stdscr.addstr(2, 0, " ".join([(letter if letter is not None else "_")
-                                  for letter in state["displayed_letters"]]))
+    stdscr.addstr(2, 0, " ".join(
+        [(letter if letter is not None else "_")
+         for letter in state["displayed_letters"]]))
+    stdscr.addstr(4, 0, "Guessed letters: " + ", ".join(
+        sorted(state["input_letters"])))

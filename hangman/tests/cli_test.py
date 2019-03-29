@@ -53,10 +53,29 @@ def test_render_word(displayed_letter, expected_string):
     state = {
         "current_screen": "game",
         "game": {
-            "displayed_letters": displayed_letter
+            "displayed_letters": displayed_letter,
+            "input_letters": {}
         }
     }
 
     render(state, stdscr)
 
-    stdscr.addstr.assert_called_with(2, 0, expected_string)
+    stdscr.addstr.assert_any_call(2, 0, expected_string)
+
+
+@pytest.mark.parametrize("input_letters,expected_string", [
+    ({}, ""),
+    ({"a", "e", "p"}, "a, e, p")
+])
+def test_render_guessed_letters(input_letters, expected_string):
+    stdscr = MagicMock()
+    state = {
+        "current_screen": "game",
+        "game": {
+            "displayed_letters": [],
+            "input_letters": input_letters
+        }
+    }
+    render(state, stdscr)
+    stdscr.addstr.assert_any_call(
+        4, 0, "Guessed letters: " + expected_string)
