@@ -10,8 +10,8 @@ from hangman.src.uistate import (
 
 # Initial state
 def test_initial_state_current_screen_is_menu():
-    assert "current_screen" in initial_state()
     assert "menu" == initial_state()["current_screen"]
+    assert initial_state()["highscore"] is None
 
 
 # Start Game
@@ -122,6 +122,38 @@ def test_compute_new_score(current_score, letter, expected_new_score):
     state["game"]["score"] = current_score
 
     assert input_letter(state, letter)["game"]["score"] == expected_new_score
+
+
+@pytest.mark.parametrize("current_highscore,current_score,new_highscore", [
+    (None, 80, 80),
+    (None, 100, 100),
+    (None, 0, 0),
+    (100, 80, 100),
+    (50, 100, 100),
+])
+def test_input_letter_change_highscore(
+        current_highscore, current_score, new_highscore):
+    state = deepcopy(STATE_IN_GAME)
+    # The player is about to win
+    state["game"]["word"] = "boogie"
+    state["game"]["input_letters"] = {"b", "o", "g", "i"}
+
+    state["game"]["score"] = current_score
+    state["highscore"] = current_highscore
+
+    assert input_letter(state, "e")["highscore"] == new_highscore
+
+
+def test_input_letter_keep_highscore():
+    state = deepcopy(STATE_IN_GAME)
+    # The player is not about to win
+    state["game"]["word"] = "boogie"
+    state["game"]["input_letters"] = {"b", "o", "g"}
+
+    state["game"]["score"] = "100"
+    state["highscore"] = "20"
+
+    assert input_letter(state, "e")["highscore"] == "20"
 
 
 # Pass screen

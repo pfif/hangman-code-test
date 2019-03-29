@@ -105,3 +105,20 @@ def test_print_score():
     render(state, stdscr)
 
     stdscr.addstr.assert_any_call(0, 0, "Score: 40")
+
+
+@pytest.mark.parametrize("highscore,mode,expected_sentence", [
+    (None, STATE_IN_GAME, "No highscore yet"),
+    (80, STATE_IN_GAME, "Highscore: 80"),
+    (None, STATE_MENU, "No highscore yet"),
+    (80, STATE_MENU, "Highscore: 80")
+])
+def test_print_highscore(highscore, mode, expected_sentence):
+    stdscr = MagicMock()
+
+    state = deepcopy(mode)
+    state["highscore"] = highscore
+
+    render(state, stdscr)
+
+    stdscr.addstr.assert_any_call(10, 0, expected_sentence)

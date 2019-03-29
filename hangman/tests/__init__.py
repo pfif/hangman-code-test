@@ -1,5 +1,6 @@
 STATE_IN_GAME = {
     "current_screen": "game",
+    "highscore": 100,
     "game": {
         "mode": "main",
         "word": "boogie",
@@ -13,5 +14,6 @@ STATE_IN_GAME = {
 }
 
 STATE_MENU = {
-    "current_screen": "menu"
+    "current_screen": "menu",
+    "highscore": None
 }

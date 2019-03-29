@@ -6,6 +6,7 @@ WORDS = ["3dhubs", "marvin", "print", "filament", "order", "layer"]
 def initial_state():
     return {
         "current_screen": "menu",
+        "highscore": None
     }
 
 
@@ -67,13 +68,23 @@ def compute_remaining_lives_and_score(state, letter):
 
 def end_game_if_lives_too_low(state):
     if state["game"]["lives"] == 0:
-        state["game"]["mode"] = "end_screen"
-        state["game"]["end_screen_sentence"] = "You loose! (Press any key to continue)"  # noqa
+        state = end_game(state, "You loose! (Press any key to continue)")
     return state
 
 
 def end_game_if_word_found(state):
     if None not in state["game"]["displayed_letters"]:
-        state["game"]["mode"] = "end_screen"
-        state["game"]["end_screen_sentence"] = "You win! (Press any key to continue)"  # noqa
+        state = end_game(state, "You win! (Press any key to continue)")
+    return state
+
+
+def end_game(state, sentence):
+    state["game"]["mode"] = "end_screen"
+    state["game"]["end_screen_sentence"] = sentence
+
+    highscore = state["highscore"]
+    score = state["game"]["score"]
+    state["highscore"] = (
+        max(highscore, score) if highscore is not None else score)
+
     return state

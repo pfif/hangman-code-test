@@ -17,8 +17,9 @@
 ** DONE [#A] As a player, when I loose, I want to see a screen where I see the word I was suppose to guess
 ** DONE As a player, I am taken to the menu after I saw the "loosing/winning" screen
 ** DONE As a player, I see my score on the current game
-** TODO As a player, I see the hi-score on every screens
+** DONE As a player, I see the hi-score on every screens
 ** TODO As a player, after the end screen, I am asked my name that is then use to save in the leaderboard
+** TODO As a player, my highscore is saved for me to find it when restarting the program
 ** DONE [#A] As a developer, I want to easily extend the list of words
 ** TODO As a player I want to see the letters I selected in order
 * Leaderboard

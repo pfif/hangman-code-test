@@ -60,6 +60,7 @@ def render(state, stdscr):
     if state["current_screen"] == "game":
         render_game(stdscr, state["game"])
 
+    render_highscore(stdscr, state)
     stdscr.refresh()
 
 
@@ -95,3 +96,11 @@ def render_game_remaining_lives(stdsrc, state, width):
     lives_string = "Remaining lives: " + " ".join(["|"] * state["lives"])
 
     stdsrc.addstr(0, width - len(lives_string), lives_string)
+
+
+def render_highscore(stdscr, state):
+    sentence = ("No highscore yet"
+                if state["highscore"] is None
+                else "Highscore: %s" % state["highscore"])
+
+    stdscr.addstr(10, 0, sentence)
