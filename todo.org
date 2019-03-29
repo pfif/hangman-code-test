@@ -10,7 +10,7 @@
 ** DONE [#A] As a player, I see the letters I did not guess as empty elements and the letter that I did guess
 ** DONE [#A] As a player, I see all the letters that I made a guess for
 ** DONE [#A] As a player, I can make a guess for a letter
-** TODO [#A] As a player, I see how many bars is left to build my prison
+** DONE [#A] As a player, I see how many bars is left to build my prison
 ** TODO [#B] As a player, I see a comment of the jailor at the bottom of the screen
 ** TODO [#A] As a player, from I input a letter, from time to time, I see a suspens screen with a comment of the jailor and three dots
 ** TODO [#A] As a player, when I win, I want to see a screen telling me that I did, and repeating the word to me
