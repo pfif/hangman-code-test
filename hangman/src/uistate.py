@@ -31,8 +31,8 @@ def start_game(state):
 
 def input_letter(state, letter):
     state["game"]["input_letters"].add(letter)
-    state = hide_letters_from_word(state)
     state = compute_remaining_lives_and_score(state, letter)
+    state = hide_letters_from_word(state)
     state = end_game_if_lives_too_low(state)
     state = end_game_if_word_found(state)
     return state
@@ -47,7 +47,10 @@ def pass_screen(state):
 
 def hide_letters_from_word(state):
     word = state["game"]["word"]
-    input_letters = state["game"]["input_letters"]
+    if state["game"]["lives"] > 0:
+        input_letters = state["game"]["input_letters"]
+    else:
+        input_letters = set(word)
 
     state["game"]["displayed_letters"] = (
         [(letter if letter in input_letters else None) for letter in word])
@@ -73,7 +76,10 @@ def end_game_if_lives_too_low(state):
 
 
 def end_game_if_word_found(state):
-    if None not in state["game"]["displayed_letters"]:
+    word = state["game"]["word"]
+    input_letters = state["game"]["input_letters"]
+
+    if set(word) == set(input_letters):
         state = end_game(state, "You win! (Press any key to continue)")
     return state
 

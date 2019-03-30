@@ -94,7 +94,7 @@ def test_input_letter_end_of_lives(remaining_lives, expected_mode):
 def test_input_letter_end_of_live_sentence():
     state = deepcopy(STATE_IN_GAME)
     state["game"]["word"] = "boogie"
-    state["game"]["lives"] = 0
+    state["game"]["lives"] = 1
 
     assert input_letter(state, "r")["game"]["end_screen_sentence"] == "You loose! (Press any key to continue)"  # noqa
 
@@ -154,6 +154,24 @@ def test_input_letter_keep_highscore():
     state["highscore"] = "20"
 
     assert input_letter(state, "e")["highscore"] == "20"
+
+
+@pytest.mark.parametrize("remaining_lives, displayed_letters", [
+    (1, ["b", "o", "o", "g", "i", "e"]),
+    (3, ["b", "o", "o", "g", None, None])
+])
+def test_input_letter_show_letters_when_loosing(
+        remaining_lives, displayed_letters):
+    state = deepcopy(STATE_IN_GAME)
+
+    # The player is about to loose
+    state["game"]["word"] = "boogie"
+    state["game"]["displayed_letters"] = ["b", "o", "o", "g", None, None]
+    state["game"]["input_letters"] = {"b", "o", "g"}
+    state["game"]["lives"] = remaining_lives
+
+    assert input_letter(state, "r")["game"]["displayed_letters"] == (
+        displayed_letters)
 
 
 # Pass screen
