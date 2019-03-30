@@ -14,13 +14,13 @@ def initial_state():
 def start_game(state):
     state["current_screen"] = "game"
 
-    word = choice(WORDS)
+    word = choice(WORDS).lower()
 
     state["game"] = {
         "mode": "main",
         "word": word,
         "input_letters": set(),
-        "lives": 5,
+        "lives": 10,
         "score": 100
     }
 
@@ -79,7 +79,7 @@ def end_game_if_word_found(state):
     word = state["game"]["word"]
     input_letters = state["game"]["input_letters"]
 
-    if set(word) == set(input_letters):
+    if set(word).issubset(input_letters):
         state = end_game(state, "You win! (Press any key to continue)")
     return state
 
