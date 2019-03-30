@@ -65,7 +65,7 @@ def render(state, stdscr):
 
 
 def render_menu(stdscr):
-    stdscr.addstr(0, 0, "Darkest Prisoner")
+    stdscr.addstr(0, 0, "Hangman")
     stdscr.addstr(2, 0, "Press any key to start")
 
 

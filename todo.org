@@ -1,5 +1,5 @@
 * Code test specific feature
-** TODO As a reader of the code, I read why certain design decision were made in the README.md file
+** DONE As a reader of the code, I read why certain design decision were made in the README.md file
 (Limit of the current model : uistate cannot push state/uistate manages only the game mecanics, not the game visual)
 * Menu
 ** DONE As a player, I see the name of the game in the menu
