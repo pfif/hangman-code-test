@@ -10,7 +10,7 @@ To run it, place yourself in the root directory of the repository and execute
 
 This program is in two parts:
 
-- The UI Server (`hangman/src/uiserver.py`) : it provides a json state of what
+- The UI Server (`hangman/src/uiserver.py`) : it provides a state of what
   should be displayed on screen. It can react to events.
 - An interpreter (`hangman/src/cli.py`) : renders the UI state and read input to
   provide events to the UI server
