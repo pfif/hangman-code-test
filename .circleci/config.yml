@@ -20,14 +20,11 @@ jobs:
     steps:
       - checkout
 
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
       - run:
           name: run tests
-          command: pytest --junit-xml=testreport.xml
+          command: |
+            pip install pytest
+            pytest --junit-xml=testreport.xml
 
       - store_test_results:
           path: testreport.xml
