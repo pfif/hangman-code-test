@@ -102,8 +102,9 @@ def test_input_letter_end_of_live_sentence():
 @pytest.mark.parametrize("inputed_letters, expected_mode", [
     ({"b", "o"}, "main"),
     ({"b", "o", "g", "i"}, "end_screen"),
+    ({"b", "o", "g", "i", "r", "f"}, "end_screen"),
 ])
-def test_input_letter_word_was_wound(inputed_letters, expected_mode):
+def test_input_letter_word_was_good(inputed_letters, expected_mode):
     state = deepcopy(STATE_IN_GAME)
     state["game"]["word"] = "boogie"
     state["game"]["input_letters"] = inputed_letters
