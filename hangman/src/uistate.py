@@ -1,6 +1,6 @@
 from random import choice
 
-WORDS = ["3dhubs", "marvin", "print", "filament", "order", "layer"]
+WORDS = open("words", "r").read().splitlines()
 
 
 def initial_state():
