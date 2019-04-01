@@ -1,4 +1,5 @@
 # Hangman (a code test)
+[![CircleCI](https://circleci.com/gh/pfif/hangman-code-test.svg?style=svg)](https://circleci.com/gh/pfif/hangman-code-test)
 
 This is a hangman game that I built for a code test.
 
